@@ -9,8 +9,12 @@ const Index: React.FC = () => {
   return (
     <Layout>
       <HomeHero />
-      <GitScanner />
-      <WebsiteScanner />
+      <div id="git-scanner">
+        <GitScanner />
+      </div>
+      <div id="website-scanner">
+        <WebsiteScanner />
+      </div>
     </Layout>
   );
 };

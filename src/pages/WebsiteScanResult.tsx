@@ -1,40 +1,59 @@
 
 import React from 'react';
 import { Layout } from '@/components/Layout';
-import { StatusCard } from '@/components/StatusCard';
 import { ScanDetails } from '@/components/ScanDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Globe, Clock, FileCode, AlertCircle, Check, X, AlertTriangle } from 'lucide-react';
+import { Shield, Globe, Clock, AlertCircle, Check, AlertTriangle, Info } from 'lucide-react';
 
 const WebsiteScanResult: React.FC = () => {
-  // Mock data for demonstration - assuming a legitimate website
-  const statusData = {
-    harmless: 65,
-    suspicious: 0,
-    malicious: 0,
-    undetected: 30,
-    timeout: 5,
+  // Actual data based on your provided format
+  const websiteScanData = {
+    "legitimacy_score": 90,
+    "red_flags": [],
+    "verified_elements": [
+        "URL is flipkart.com",
+        "Flipkart logo is present",
+        "Search bar for products",
+        "Category sections (Kilos, Mobiles, Fashion, etc.)",
+        "Login, Cart, Become a Seller options",
+        "Promotional banner for Office Chairs"
+    ],
+    "phishing_risk_level": "Low",
+    "suggested_actions": [
+        "Always double-check the URL before entering any personal information.",
+        "Ensure the site has a valid SSL certificate (HTTPS).",
+        "If you're still unsure, navigate to the site directly by typing the URL in your browser instead of clicking on a link."
+    ],
+    "full_analysis": "The screenshot appears to be a legitimate Flipkart website. The URL in the address bar is flipkart.com. The site features the Flipkart logo, a prominent search bar, and familiar category sections and navigation elements. There are no immediately obvious red flags indicating a phishing attempt. However, it is always wise to proceed with caution."
   };
   
   const scanDetails = [
     { label: 'URL', value: 'flipkart.com', icon: <Globe size={18} />, risk: 'safe' as const },
-    { label: 'Scan Time', value: '3/24/2023, 4:15:22 PM', icon: <Clock size={18} /> },
-    { label: 'Detection Engine', value: 'PhishDetect (Multi-Engine)', icon: <Shield size={18} /> },
-    { label: 'Status', value: 'Completed', icon: <AlertCircle size={18} /> },
+    { label: 'Scan Time', value: new Date().toLocaleString(), icon: <Clock size={18} /> },
+    { label: 'Legitimacy Score', value: `${websiteScanData.legitimacy_score}%`, icon: <Shield size={18} /> },
+    { label: 'Phishing Risk', value: websiteScanData.phishing_risk_level, icon: <AlertCircle size={18} /> },
   ];
   
-  const verifiedElements = [
-    { element: 'Domain age', status: 'verified', details: 'Registered > 5 years ago' },
-    { element: 'SSL Certificate', status: 'verified', details: 'Valid, issued by trusted CA' },
-    { element: 'Website Content', status: 'verified', details: 'Matches official branding' },
-    { element: 'Payment Processing', status: 'verified', details: 'Secure checkout detected' },
-  ];
+  // Legitimacy score
+  const legitimacyScore = websiteScanData.legitimacy_score;
   
-  // Legitimacy score (out of 100)
-  const legitimacyScore = 98;
+  // Determine score color
+  let scoreColorClass = 'text-teal-500';
+  let scoreIcon = <Check size={16} />;
+  let scoreBgClass = 'bg-teal-500/10';
+  let scoreLabel = 'Verified Legitimate';
   
-  // Phishing risk level
-  const phishingRisk = 'Low';
+  if (legitimacyScore < 50) {
+    scoreColorClass = 'text-red-500';
+    scoreIcon = <AlertTriangle size={16} />;
+    scoreBgClass = 'bg-red-500/10';
+    scoreLabel = 'Potentially Malicious';
+  } else if (legitimacyScore < 80) {
+    scoreColorClass = 'text-amber-500';
+    scoreIcon = <AlertTriangle size={16} />;
+    scoreBgClass = 'bg-amber-500/10';
+    scoreLabel = 'Exercise Caution';
+  }
   
   return (
     <Layout showBackButton>
@@ -45,22 +64,14 @@ const WebsiteScanResult: React.FC = () => {
           </div>
           <h1 className="text-3xl font-bold">Legitimate Website Detected</h1>
           <p className="text-white/60 max-w-xl mx-auto">
-            This website appears to be legitimate with a 98% legitimacy score. No phishing indicators detected.
+            This website appears to be legitimate with a {legitimacyScore}% legitimacy score. No phishing indicators detected.
           </p>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <StatusCard type="harmless" count={statusData.harmless} delay={100} />
-          <StatusCard type="suspicious" count={statusData.suspicious} delay={200} />
-          <StatusCard type="malicious" count={statusData.malicious} delay={300} />
-          <StatusCard type="undetected" count={statusData.undetected} delay={400} />
-          <StatusCard type="timeout" count={statusData.timeout} delay={500} />
         </div>
         
         <Tabs defaultValue="overview" className="animate-fade-in">
           <TabsList className="glass-card p-1">
             <TabsTrigger value="overview" className="tab-button">Overview</TabsTrigger>
-            <TabsTrigger value="analysis" className="tab-button">Analysis Details</TabsTrigger>
+            <TabsTrigger value="verified-elements" className="tab-button">Verified Elements</TabsTrigger>
             <TabsTrigger value="recommendations" className="tab-button">Recommendations</TabsTrigger>
           </TabsList>
           
@@ -104,9 +115,9 @@ const WebsiteScanResult: React.FC = () => {
                         <span className="text-xs text-white/60">Legitimacy</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-teal-500/10 text-teal-500 text-sm">
-                      <Check size={16} />
-                      <span>Verified Legitimate</span>
+                    <div className={`flex items-center gap-2 p-2 rounded-lg ${scoreBgClass} ${scoreColorClass} text-sm`}>
+                      {scoreIcon}
+                      <span>{scoreLabel}</span>
                     </div>
                   </div>
                 </div>
@@ -114,114 +125,81 @@ const WebsiteScanResult: React.FC = () => {
               
               <div className="glass-card overflow-hidden">
                 <div className="px-6 py-4 border-b border-white/5">
-                  <h3 className="font-medium">Phishing Risk Assessment</h3>
+                  <h3 className="font-medium">Full Analysis</h3>
                 </div>
                 <div className="p-6">
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/70">Phishing Risk Level:</span>
-                      <div className="flex items-center gap-2 p-1.5 px-3 rounded-lg bg-teal-500/10 text-teal-500 text-sm">
-                        <Shield size={14} />
-                        <span>{phishingRisk}</span>
-                      </div>
+                  <p className="text-white/70 leading-relaxed">
+                    {websiteScanData.full_analysis}
+                  </p>
+                  
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="flex items-center gap-2 text-sm font-medium text-white/80">
+                      <Info size={16} className="text-white/60" />
+                      Phishing Risk Level
                     </div>
-                    
-                    <div className="space-y-1">
-                      <span className="text-sm text-white/70">Verified Elements:</span>
-                      <div className="space-y-2 mt-2">
-                        {verifiedElements.map((element, index) => (
-                          <div 
-                            key={index}
-                            className="flex items-center justify-between p-3 rounded-lg bg-white/5"
-                          >
-                            <div className="flex items-center gap-2">
-                              <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
-                                <Check size={14} />
-                              </div>
-                              <span className="text-sm">{element.element}</span>
-                            </div>
-                            <span className="text-xs text-white/60">{element.details}</span>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="mt-2 flex items-center gap-2 p-2 rounded-lg bg-teal-500/10 text-teal-500 text-sm">
+                      <Shield size={14} />
+                      <span>{websiteScanData.phishing_risk_level}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className="glass-card overflow-hidden">
-              <div className="px-6 py-4 border-b border-white/5">
-                <h3 className="font-medium">Detection Insight</h3>
-              </div>
-              <div className="p-6">
-                <p className="text-white/70 leading-relaxed">
-                  This website was analyzed using multiple detection engines and machine learning algorithms. 
-                  The analysis confirms that this is the legitimate Flipkart website with proper security measures in place.
-                  No phishing indicators, suspicious redirects, or malicious scripts were detected.
-                </p>
-              </div>
-            </div>
           </TabsContent>
           
-          <TabsContent value="analysis" className="mt-6">
-            <div className="glass-card p-6 space-y-6">
-              <p className="text-white/70 leading-relaxed">
-                Our comprehensive analysis evaluated multiple aspects of the website to determine its legitimacy:
-              </p>
-              
-              <div className="space-y-4 mt-2">
-                <div className="p-4 rounded-lg border border-white/5 bg-white/2">
-                  <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
-                      <Check size={14} />
+          <TabsContent value="verified-elements" className="mt-6">
+            <div className="glass-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-white/5">
+                <h3 className="font-medium">Verified Elements</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-3">
+                  {websiteScanData.verified_elements.map((element, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-white/5"
+                    >
+                      <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
+                        <Check size={14} />
+                      </div>
+                      <span className="text-sm text-white/80">{element}</span>
                     </div>
-                    Domain Analysis
-                  </h4>
-                  <p className="text-sm text-white/60">
-                    The domain "flipkart.com" was registered more than 5 years ago, which is a strong indicator of legitimacy.
-                    The domain registration information matches the expected business details.
-                  </p>
+                  ))}
                 </div>
                 
-                <div className="p-4 rounded-lg border border-white/5 bg-white/2">
-                  <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
-                      <Check size={14} />
+                {websiteScanData.red_flags.length > 0 && (
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 text-sm font-medium text-white/80 mb-3">
+                      <AlertTriangle size={16} className="text-amber-500" />
+                      Red Flags
                     </div>
-                    SSL Certificate Verification
-                  </h4>
-                  <p className="text-sm text-white/60">
-                    The website uses a valid SSL certificate issued by a trusted Certificate Authority.
-                    The certificate is properly configured and not expired.
-                  </p>
-                </div>
+                    <div className="space-y-3">
+                      {websiteScanData.red_flags.map((flag, index) => (
+                        <div 
+                          key={index}
+                          className="flex items-center gap-3 p-3 rounded-lg bg-white/5"
+                        >
+                          <div className="p-1 rounded-full bg-amber-500/10 text-amber-500">
+                            <AlertTriangle size={14} />
+                          </div>
+                          <span className="text-sm text-white/80">{flag}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 
-                <div className="p-4 rounded-lg border border-white/5 bg-white/2">
-                  <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
-                      <Check size={14} />
+                {websiteScanData.red_flags.length === 0 && (
+                  <div className="mt-6 p-4 rounded-lg border border-white/10 bg-teal-500/5">
+                    <div className="flex items-center gap-2 font-medium text-teal-500">
+                      <Shield size={16} />
+                      No Red Flags Detected
                     </div>
-                    Content Analysis
-                  </h4>
-                  <p className="text-sm text-white/60">
-                    Our image recognition algorithms confirmed that the website's content, including logos and branding,
-                    match the official Flipkart brand assets. No inconsistencies or manipulated content was detected.
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-lg border border-white/5 bg-white/2">
-                  <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <div className="p-1 rounded-full bg-teal-500/10 text-teal-500">
-                      <Check size={14} />
-                    </div>
-                    Security Analysis
-                  </h4>
-                  <p className="text-sm text-white/60">
-                    No malicious scripts, suspicious redirects, or phishing patterns were detected.
-                    The website implements proper security headers and follows security best practices.
-                  </p>
-                </div>
+                    <p className="mt-2 text-sm text-white/70">
+                      Our analysis found no suspicious elements or patterns that would indicate this website is not legitimate.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </TabsContent>
@@ -229,39 +207,17 @@ const WebsiteScanResult: React.FC = () => {
           <TabsContent value="recommendations" className="mt-6">
             <div className="glass-card p-6">
               <p className="text-white/70 leading-relaxed">
-                The website appears to be legitimate. Here are some general security recommendations when browsing online:
+                Based on our analysis, here are some recommended actions:
               </p>
               <ul className="mt-4 space-y-3 text-white/70">
-                <li className="flex items-start gap-2">
-                  <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
-                    <Shield size={14} />
-                  </div>
-                  <span>Always verify the URL in your browser's address bar before entering sensitive information.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
-                    <Shield size={14} />
-                  </div>
-                  <span>Look for the padlock icon in your browser to ensure the connection is secure.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
-                    <Shield size={14} />
-                  </div>
-                  <span>Be cautious of unexpected requests for personal or financial information.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
-                    <Shield size={14} />
-                  </div>
-                  <span>Use two-factor authentication whenever possible for additional security.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
-                    <Shield size={14} />
-                  </div>
-                  <span>Keep your browser and security software up to date to protect against vulnerabilities.</span>
-                </li>
+                {websiteScanData.suggested_actions.map((action, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <div className="p-1 rounded-full bg-teal-500/10 text-teal-500 mt-0.5">
+                      <Shield size={14} />
+                    </div>
+                    <span>{action}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </TabsContent>
