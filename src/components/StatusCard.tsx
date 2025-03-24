@@ -14,7 +14,7 @@ export const StatusCard: React.FC<StatusCardProps> = ({ type, count, delay = 0 }
   switch (type) {
     case 'harmless':
       icon = <CheckCircle size={18} />;
-      label = 'Harmless';
+      label = 'Safe';
       textClass = 'text-teal-500';
       break;
     case 'suspicious':
