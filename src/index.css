@@ -1,38 +1,37 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
+    --background: 230 35% 7%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 3.9%;
+    --card: 229 20% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 3.9%;
+    --popover: 229 20% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 165 80% 40%;
+    --primary: 160 64% 52%;
     --primary-foreground: 144 100% 99%;
 
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 229 20% 10%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 240 3.7% 15.9%;
+    --accent: 229 20% 10%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 229 20% 15%; 
+    --input: 229 20% 15%;
     --ring: 240 4.9% 83.9%;
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
 }
 
@@ -47,24 +46,19 @@
   }
   
   body {
-    @apply bg-dark text-foreground antialiased;
+    @apply bg-[#0d0f17] text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-    background-image: radial-gradient(
-      circle at top right,
-      rgba(22, 163, 141, 0.15),
-      rgba(18, 19, 32, 0) 40%
-    );
     background-attachment: fixed;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-dark-card/90 backdrop-blur-md border border-white/5 rounded-2xl shadow-xl;
+    @apply bg-[#141725] border border-[#1d2233] rounded-lg shadow-xl;
   }
   
   .glass-input {
-    @apply bg-dark-card/50 backdrop-blur-sm border border-white/5 rounded-xl 
+    @apply bg-[#141725]/50 border border-[#1d2233] rounded-xl 
     px-4 py-3 outline-none focus:ring-1 focus:ring-teal-500/20 transition-all duration-200;
   }
   
@@ -74,18 +68,18 @@
   }
   
   .btn-secondary {
-    @apply bg-dark-card hover:bg-dark-card/70 text-white rounded-xl px-6 py-3 
-    transition-all duration-200 border border-white/5 flex items-center justify-center gap-2;
+    @apply bg-[#141725] hover:bg-[#1d2233] text-white rounded-xl px-6 py-3 
+    transition-all duration-200 border border-[#1d2233] flex items-center justify-center gap-2;
   }
   
   .tab-button {
-    @apply px-5 py-2 rounded-lg text-sm font-medium transition-colors
-    hover:bg-white/5 data-[state=active]:bg-white/10;
+    @apply px-5 py-2 rounded-none text-sm font-medium transition-colors
+    hover:bg-transparent hover:text-teal-500 border-b-2 border-transparent data-[state=active]:border-teal-500
+    data-[state=active]:text-teal-500 data-[state=active]:bg-transparent;
   }
   
   .animated-backdrop {
-    @apply backdrop-blur-xl bg-gradient-to-br from-dark-card/80 to-dark-card/30 
-    border border-white/5 transition-all duration-300;
+    @apply bg-[#141725] border border-[#1d2233] transition-all duration-300;
   }
 }
 

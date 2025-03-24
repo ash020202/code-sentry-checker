@@ -9,51 +9,46 @@ interface StatusCardProps {
 }
 
 export const StatusCard: React.FC<StatusCardProps> = ({ type, count, delay = 0 }) => {
-  let icon, label, bgClass, textClass;
+  let icon, label, textClass;
   
   switch (type) {
     case 'harmless':
-      icon = <CheckCircle size={22} />;
+      icon = <CheckCircle size={18} />;
       label = 'Harmless';
-      bgClass = 'bg-teal-500/10';
       textClass = 'text-teal-500';
       break;
     case 'suspicious':
-      icon = <AlertTriangle size={22} />;
+      icon = <AlertTriangle size={18} />;
       label = 'Suspicious';
-      bgClass = 'bg-amber-500/10';
-      textClass = 'text-amber-500';
+      textClass = 'text-yellow-500';
       break;
     case 'malicious':
-      icon = <XCircle size={22} />;
+      icon = <XCircle size={18} />;
       label = 'Malicious';
-      bgClass = 'bg-red-500/10';
       textClass = 'text-red-500';
       break;
     case 'undetected':
-      icon = <HelpCircle size={22} />;
+      icon = <HelpCircle size={18} />;
       label = 'Undetected';
-      bgClass = 'bg-blue-500/10';
-      textClass = 'text-blue-500';
+      textClass = 'text-gray-400';
       break;
     case 'timeout':
-      icon = <Clock size={22} />;
+      icon = <Clock size={18} />;
       label = 'Timeout';
-      bgClass = 'bg-gray-500/10';
-      textClass = 'text-gray-500';
+      textClass = 'text-gray-400';
       break;
   }
   
   return (
     <div 
-      className="glass-card p-4 flex flex-col items-center justify-center gap-1 animate-fade-in"
+      className="glass-card p-4 flex flex-col items-center justify-center gap-1"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className={`p-2 rounded-full ${bgClass} ${textClass} mb-1`}>
+      <div className={`mt-1 ${textClass}`}>
         {icon}
       </div>
-      <div className="text-3xl font-semibold mt-1">{count}</div>
-      <div className="text-sm text-white/60">{label}</div>
+      <div className="text-xl font-semibold mt-1 text-white">{count}</div>
+      <div className="text-xs text-gray-500">{label}</div>
     </div>
   );
 };
